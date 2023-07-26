@@ -265,11 +265,11 @@ function action_invoice_add_row() {
   const template_table_row = `
   <tr>
     <td colspan="2"><input type="text" name="name" value="Tiles" required style="width: 100%;"></td>
-    <td><input type="text" name="hsn" value="69072100" style="width: 80px;"></td>
-    <td><input type="text" name="mrp" value="125" style="width: 80px;"></td>
-    <td><input type="text" name="rate" value="100" required style="width: 80px;"></td>
+    <td><input type="number" name="hsn" value="69072100" style="width: 80px;"></td>
+    <td><input type="number" name="mrp" value="125" style="width: 80px;"></td>
+    <td><input type="number" name="rate" value="100" required style="width: 80px;"></td>
     <td>
-      <input type="text" name="qty" value="1" required style="width: 80px;">
+      <input type="number" name="qty" value="1" required style="width: 80px;">
       <select name="unit">
         <option value="nos" selected>nos</option>
         <option value="pcs">pcs</option>
@@ -283,13 +283,13 @@ function action_invoice_add_row() {
         <option value="ton">ton</option>
       </select>
     </td>
-    <td><input type="text" name="gst" value="18" required style="width: 80px;">
+    <td><input type="number" name="gst" value="18" required style="width: 80px;">
     <select name="incTax">
       <option value="1" selected>Inc</option>
       <option value="0">Exc</option>
     </select>
     </td>
-    <td><a id="deleteRow" class="link-danger text-decoration-none" href="#" onclick="action_invoice_row_delete()">x</a></td>
+    <td><a id="deleteRow" class="fw-bold link-danger text-decoration-none" href="#" onclick="action_invoice_row_delete()">X</a></td>
   </tr>
   `;
   // compile the template
@@ -306,8 +306,9 @@ function template_invoice_create(json_data) {
     <td colspan="3" class="border border-dark border-start-0">
       <b>{{company.name}}</b><br> 
       {{company.address}}<br>
-      <b>Web:</b> {{company.website}} <br>
-      <b>TEL:</b> {{company.tel}}, <b>E-Mail:</b> {{company.email}}
+      <b>TEL:</b> {{company.tel}} <br>
+      {{#if company.email}}<b>E-Mail:</b> {{company.email}}{{/if}}
+      {{#if company.website}}, <b>Web:</b> {{company.website}}{{/if}}
     </td>
   </tr>
   <tr>
@@ -379,6 +380,8 @@ function template_invoice_create(json_data) {
     - Tolerance: ± 0.5% for Weight, ± 5% for thickness & Qty is acceptable.<br>
     </td>
   </tr>`;
+
+
   // compile the template
   $('#invoice_header').html("");
   var output = Handlebars.compile(template_table_header)(json_data);
