@@ -6,11 +6,11 @@
 
 function _get_company_value(key) {
   default_data = {
-    'company_name': "DELTAWARE ENTERPRISES",
-    'company_address': "6/1210, Tharik Complex, Thirupoondi-Kameswaram Road,\n Thirupoondi - 611110, Nagapattinam Dist, \n Tamil Nadu, India.",
-    'company_website': "www.deltaware.in",
-    'company_tel': "9940198130",
-    'company_email': "support@deltaware.in",
+    'company_name': "DEVNODES ENTERPRISES",
+    'company_address': "Chennai, \n Tamil Nadu, India.",
+    'company_website': "https://devnodes.in",
+    'company_tel': "987654321",
+    'company_email': "youremail@domain.com",
   }
 
   if (localStorage.getItem(key) === null) {
