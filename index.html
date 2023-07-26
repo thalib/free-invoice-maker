@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free Invoicing Maker App by Devnodes</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+    integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+  <script src=" https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js "></script>
+  <script src="./app.js"></script>
+
+  <script type="text/javascript">
+    function onloadFunction() {
+      action_invoice_add_row();
+      helper_update_invoice_prefix();
+      helper_update_invoice_no();
+      helper_update_invoice_date();
+
+      const settingsModal = document.getElementById('settingsModal')
+      settingsModal.addEventListener('shown.bs.modal', () => {
+        helper_update_company_info();
+      })
+
+      const logo_upload = document.getElementById('companyLogo');
+      logo_upload.addEventListener('change', (event) => {
+        const image = event.target.files[0];
+        helper_logo_upload(image);
+    });
+
+      console.log("loaded...");
+    }
+    window.onload = onloadFunction;
+  </script>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link href="./style.css" rel="stylesheet">
+
+  <style>
+
+  </style>
+
+</head>
+
+<body>
+  <main class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12 align-self-center">
+        <form onsubmit="return action_submit_invoice_preview(event);">
+          <div class="bg-body-secondary border rounded-top py-3 ">
+            <h1 class="fs-5 fw-semibold text-center">Free Invoicing Creator <span class="fs-6 text-primary">by
+                devnodes.in</span></h1>
+          </div>
+          <table class="table table-success mb-0">
+            <thead>
+              <tr class="table-primary">
+                <th colspan="2">Bill Type</th>
+                <th colspan="2">Date</th>
+                <th colspan="2">Invoice Prefix</th>
+                <th colspan="2">Invoice No</th>
+              </tr>
+              <tr class="table-primary">
+                <td colspan="2">
+                  <select name="type" style="width: 100%;">
+                    <option value="bil" selected>Bill</option>
+                    <option value="inv">Invoice</option>
+                    <option value="est">Estimate</option>
+                    <option value="emp">Empty</option>
+                  </select>
+                </td>
+                <td colspan="2"><input id="invoice_date" type="date" value="-" name="invoice_date" style="width: 100%;">
+                </td>
+                <td colspan="2"><input id="invoice_prefix" type="text" value="-" name="invoice_prefix"
+                    style="width: 100%;"></td>
+                <td colspan="2"><input id="invoice_no" type="text" value="-" name="invoice_no" style="width: 100%;">
+                </td>
+              </tr>
+              <tr class="table-primary">
+                <th colspan="3">Billing To</th>
+                <th colspan="3">Shipping To</th>
+                <th colspan="2">Notes</th>
+              </tr>
+              <tr class="table-primary">
+                <td colspan="3"><textarea id="bill_to" type="text" rows="2" name="bill_to"
+                    style="width: 100%;">-</textarea></td>
+                <td colspan="3"><textarea id="ship_to" type="text" rows="2" name="ship_to"
+                    style="width: 100%;"></textarea></td>
+                <td colspan="2"><textarea id="notes" type="text" rows="2" name="notes" style="width: 100%;"></textarea>
+                </td>
+              </tr>
+              <tr>
+                <th colspan="2">Name</th>
+                <th>HSN</th>
+                <th>MRP</th>
+                <th>Rate</th>
+                <th>Qty</th>
+                <th>GST</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="invoice_form">
+
+            </tbody>
+          </table>
+
+
+          <div class="bg-body-secondary rounded-bottom">
+            <p class="py-2">
+              <a id="addRow" class="btn btn-light fw-bold rounded-5 ms-1" href="#"
+                onclick="action_invoice_add_row()">Add Row</a>
+              <button type="submit" class="btn btn-warning fw-bold rounded-5 ms-1">Preview Invoice</button>
+              <a id="action_invoice_new" class="btn btn-light fw-bold rounded-5 ms-1" href="#"
+                onclick="action_invoice_new()">New Invoice</a>
+              <button type="button" id="settingButton" class="btn btn-light fw-bold rounded-5 ms-1"
+                data-bs-toggle="modal" data-bs-target="#settingsModal">Settings</button>
+            </p>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- modal settings window -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="settingsModalLabel">Company Details</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form onsubmit="return action_submit_modal_settings(event);">
+              <div class="mb-1">
+                <label for="companyName" class="col-form-label">Company Name:</label>
+                <input type="text" class="form-control" id="companyName">
+              </div>
+              <div class="mb-1">
+                <label for="companyAddress" class="col-form-label">Address:</label>
+                <textarea class="form-control" id="companyAddress"></textarea>
+              </div>
+              <div class="mb-1">
+                <label for="companyWebsite" class="col-form-label">Website:</label>
+                <input type="text" class="form-control" id="companyWebsite">
+              </div>
+              <div class="mb-1">
+                <label for="companyTel" class="col-form-label">Tel:</label>
+                <input type="text" class="form-control" id="companyTel">
+              </div>
+              <div class="mb-1">
+                <label for="companyEmail" class="col-form-label">Email:</label>
+                <input type="text" class="form-control" id="companyEmail">
+              </div>
+              <div class="mb-1">
+                <label for="companyLogo" class="form-label">Logo: (recommended max size 1000x500px</label>
+                <input class="form-control" type="file" id="companyLogo">
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="action_modal_settings_clear()">Clear
+                  Data</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="download" class="invisible">
+    <div class="bg-light rounded-bottom text-center">
+      <p class="py-2">
+        <a id="downloadInvoice" class="btn btn-success fw-bold rounded-3 " href="#" onclick="action_invoice_download()">Download
+          Invoice</a>
+      </p>
+    </div>
+  </div>
+
+  <main id="invoice_output" class="container-fluidd p-1">
+    <div class="row">
+      <div class="col align-self-center">
+        <table class="table table-bordered border-dark table-sm pb-0 mb-0">
+          <tbody id="invoice_header">
+            <!-- invoice header -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col align-self-center">
+        <table class="table table-bordered border-dark table-sm">
+          <tbody id="invoice">
+            <!-- invoice items & footer -->
+          </tbody>
+        </table>
+        </form>
+      </div>
+    </div>
+  </main>
+
+</body>
+
+</html>
