@@ -1,4 +1,6 @@
-A fully web-based invoicing application is a web based application, (only uses html, css & js) that allows users to create, preview, and download invoice in PNG format. The application is created by www.devnods.in. The application is designed to be easy to use and can be accessed from any device with an internet connection.
+A fully web-based invoicing application is a web based application, (only uses html, css & js) that allows users to create, preview, and download invoice in PNG format. The application is created by [https://devnodes.in](https://devnodes.in)
+
+The application is designed to be easy to use and can be accessed from any device with an internet connection.
 
 Try Live App: [https://thalib.github.io/free-invoice-maker](https://thalib.github.io/free-invoice-maker)
 
