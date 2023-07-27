@@ -63,7 +63,7 @@ main {
 
 #invoice_app {
   width: 900px !important;
-  min-width: 900px;
+  max-width: 900px;
   margin: auto;
 }
 
