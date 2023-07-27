@@ -27,21 +27,27 @@
 
   <script type="text/javascript">
     function onloadFunction() {
-      action_invoice_add_row();
+      helper_logo_load_header();
+      helper_update_company_info_header();
       helper_update_invoice_prefix();
       helper_update_invoice_no();
       helper_update_invoice_date();
+      action_invoice_add_row();
 
       const settingsModal = document.getElementById('settingsModal')
       settingsModal.addEventListener('shown.bs.modal', () => {
-        helper_update_company_info();
+        helper_update_company_info_invoice();
       })
 
-      const logo_upload = document.getElementById('companyLogo');
+      const logo_upload = document.getElementById('input_company_logo');
       logo_upload.addEventListener('change', (event) => {
         const image = event.target.files[0];
         helper_logo_upload(image);
       });
+
+      //Enable tooltips - https://getbootstrap.com/docs/5.3/components/tooltips/#enable-tooltips
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
       console.log("loaded...");
     }
@@ -65,82 +71,115 @@
     <div class="row">
       <div class="col-12 align-self-center">
         <form onsubmit="return action_submit_invoice_preview(event);">
-          <div class="bg-body-secondary border rounded-top py-3 ">
-            <h1 class="fs-5 fw-semibold text-center">Free Invoice Creator Web App <a class="fs-6 text-decoration-none"
-                target="_blank" href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">by https://devnodes.in</a></h1>
-          </div>
-          <div class="table-scroll">
-          <table class="table table-success mb-0">
-            <thead>
-              <tr class="table-primary">
-                <th colspan="2">Bill Type</th>
-                <th colspan="2">Date</th>
-                <th colspan="2">Invoice Prefix</th>
-                <th colspan="2">Invoice No</th>
-              </tr>
-              <tr class="table-primary">
-                <td colspan="2">
-                  <select name="type" style="width: 100%;">
-                    <option value="bil" selected>Bill</option>
-                    <option value="inv">Invoice</option>
-                    <option value="est">Estimate</option>
-                    <option value="emp">Empty</option>
-                  </select>
-                </td>
-                <td colspan="2"><input id="invoice_date" type="date" value="-" name="invoice_date" style="width: 100%;" required></td>
-                <td colspan="2"><input id="invoice_prefix" type="text" value="-" name="invoice_prefix" style="width: 100%;" required></td>
-                <td colspan="2"><input id="invoice_no" type="number" value="-" name="invoice_no" style="width: 100%;" required></td>
-              </tr>
-              <tr class="table-primary">
-                <th colspan="3">Billing To</th>
-                <th colspan="3">Shipping To</th>
-                <th colspan="2">Notes</th>
-              </tr>
-              <tr class="table-primary">
-                <td colspan="3"><textarea id="bill_to" type="text" rows="2" name="bill_to"
-                    style="width: 100%;">-</textarea></td>
-                <td colspan="3"><textarea id="ship_to" type="text" rows="2" name="ship_to"
-                    style="width: 100%;"></textarea></td>
-                <td colspan="2"><textarea id="notes" type="text" rows="2" name="notes" style="width: 100%;"></textarea>
-                </td>
-              </tr>
-              <tr>
-                <th colspan="2">Name</th>
-                <th>HSN</th>
-                <th>MRP</th>
-                <th>Rate</th>
-                <th>Qty</th>
-                <th>GST</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="invoice_form">
+          <div class="bg-light border border-secondary rounded py-3 ">
+            <h1 class="fs-5 fw-semibold text-center">Free Invoice Creator Web App</h1>
+            <div class="d-flex mb-3 border-top border-bottom">
+              <div class="me-auto p-2">
+                <button type="submit" class="btn btn-warning fs-3 fw-bold ms-1"><i class="bi bi-download" title="Preview and Download Invoice"></i></button>
+                <button type="button" class="btn btn-light fs-3 fw-bold ms-1" onclick="return action_invoice_new(event);"><i class="bi bi-file-earmark-plus-fill" title="New Invoice"></i></button>
+              </div>
+              <div class="align-self-center p-2">
+                  <span class="pe-3">App by <a class="text-decoration-none" target="_blank"
+                    href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">Devnodes.in</a></span>
+              </div>
+            </div>
+            <div id="div_AlertPlaceholder"></div>
+            <div class="table-scroll">
+              <table class="table table-success mb-0">
+                <thead>
+                  <tr class="table-light">
+                    <td colspan="4">
+                      <div class="d-flex justify-content-end">
+                        <div><img id="header_companyLogo" src="logo.png" width="300" height="150"></div>
+                        <div>
+                          <button type="button" class="btn btn-link fs-3 fw-bold ms-1" data-bs-toggle="modal" data-bs-target="#settingsModal_Logo"><i class="bi bi-pencil fs-6"></i></button>
+                        </div>
+                      </div>
+                    </td>
+                    <td colspan="4">
+                      <div class="d-flex">
+                        <div>
+                          <p>
+                            <span id="header_companyName" class="fw-bold"></span><br>
+                            <span id="header_companyAddress"></span><br>
+                            <strong>Website: </strong> <span id="header_companyWebsite"></span><br>
+                            <strong>TEL: </strong><span id="header_companyTel"></span><br>
+                            <strong>E-mail:</strong> <span id="header_companyEmail"></span><br>
+                          </p>
+                        </div>
+                        <div class="align-self-start flex-shrink-1">
+                          <button type="button" class="btn btn-link fs-3 fw-bold" data-bs-toggle="modal" data-bs-target="#settingsModal"><i class="bi bi-pencil fs-6"></i></button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">Bill Type</th>
+                    <th colspan="2">Date</th>
+                    <th colspan="2">Invoice Prefix</th>
+                    <th colspan="2">Invoice No</th>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <select name="type" style="width: 100%;">
+                        <option value="bil" selected>Bill</option>
+                        <option value="inv">Invoice</option>
+                        <option value="est">Estimate</option>
+                        <option value="emp">Empty</option>
+                      </select>
+                    </td>
+                    <td colspan="2"><input id="invoice_date" type="date" value="-" name="invoice_date"
+                        style="width: 100%;" required></td>
+                    <td colspan="2"><input id="invoice_prefix" type="text" value="-" name="invoice_prefix"
+                        style="width: 100%;" required></td>
+                    <td colspan="2"><input id="invoice_no" type="number" value="-" name="invoice_no"
+                        style="width: 100%;" required></td>
+                  </tr>
+                  <tr>
+                    <th colspan="3">Billing To</th>
+                    <th colspan="3">Shipping To</th>
+                    <th colspan="2">Notes</th>
+                  </tr>
+                  <tr>
+                    <td colspan="3"><textarea id="bill_to" type="text" rows="2" name="bill_to"
+                        style="width: 100%;">-</textarea></td>
+                    <td colspan="3"><textarea id="ship_to" type="text" rows="2" name="ship_to"
+                        style="width: 100%;"></textarea></td>
+                    <td colspan="2"><textarea id="notes" type="text" rows="2" name="notes"
+                        style="width: 100%;"></textarea>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th></th>
+                    <th colspan="2">Name</th>
+                    <th>HSN</th>
+                    <th>MRP</th>
+                    <th>Rate</th>
+                    <th>Qty</th>
+                    <th>GST</th>
+                  </tr>
+                </thead>
+                <tbody id="invoice_form">
 
-            </tbody>
-            <tfoot class="table-success">
-              <tr>
-                <td colspan="8">
-                  <a id="addRow" class="btn btn-light fs-4 fw-bold ms-1" href="#" onclick="action_invoice_add_row()"><i class="bi bi-plus-circle-fill" title="Add new row"></i></a>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-          <div class="bg-body-secondary rounded-bottom">
-            <p class="py-2">
-              <button type="submit" class="btn btn-warning fs-2 fw-bold ms-1"><i class="bi bi-download" title="Preview and Download Invoice"></i></button>
-              <a id="action_invoice_new" class="btn btn-light fs-2 fw-bold ms-1" href="#" onclick="action_invoice_new()"><i class="bi bi-file-earmark-plus-fill" title="New Invoice"></i></a>
-              <button type="button" id="settingButton" class="btn btn-light fs-2 fw-bold ms-1" data-bs-toggle="modal" data-bs-target="#settingsModal">
-                <i class="bi bi-gear"title="Settings"></i>
-              </button>
-              <span class="float-end pe-3">App by <a class="text-decoration-none" target="_blank" href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">Devnodes.in</a></span>
-            </p>
-          </div>
-
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="8">
+                      <button type="button" id="addRow" class="btn btn-light fs-5 fw-bold ms-1" onclick="action_invoice_add_row()"
+                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add new item"><i
+                          class="bi bi-plus-circle-fill" title="Add new item"></i></button>
+                          <button type="submit" class="btn btn-warning fs-5 fw-bold ms-1"><i class="bi bi-download" title="Preview and Download Invoice"></i></button>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
         </form>
       </div>
     </div>
+  </main>
 
+  <div>
     <!-- modal settings window -->
     <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -171,14 +210,11 @@
                 <label for="companyEmail" class="col-form-label">Email (optional)</label>
                 <input type="email" class="form-control" id="companyEmail">
               </div>
-              <div class="mb-1">
-                <label for="companyLogo" class="form-label">Logo (recommended max size 1000x500px)</label>
-                <input class="form-control" type="file" id="companyLogo">
-              </div>
-
+  
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="action_modal_settings_clear()">Clear Data</button>
+                <button type="button" class="btn btn-primary" onclick="action_modal_settings_clear()">Clear
+                  Data</button>
                 <button type="submit" class="btn btn-primary">Save</button>
               </div>
             </form>
@@ -186,7 +222,31 @@
         </div>
       </div>
     </div>
-  </main>
+
+    <!-- modal settings window : logo -->
+    <div class="modal fade" id="settingsModal_Logo" tabindex="-1" aria-labelledby="settingsModal_Logo_Label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="settingsModal_Logo">Update Logo</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form onsubmit="return action_submit_modal_logo(event);">
+              <div class="mb-1">
+                <label for="companyLogo" class="form-label">Logo (recommended max size 1000x500px)</label>
+                <input class="form-control" type="file" id="input_company_logo">
+              </div>
+  
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div id="download" class="invisible">
     <div class="bg-light rounded-bottom text-center">

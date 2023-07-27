@@ -56,7 +56,8 @@ main {
 }
 
 #invoice_output {
-  max-width: 800px;
+  width: 800px !important;
+  min-width: 800px;
   margin: auto;
 }
 

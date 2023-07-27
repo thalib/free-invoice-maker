@@ -1,5 +1,20 @@
 //---------------------------------------
 
+// Show notification using bootstrap alers
+
+function alert(message) {
+  const divID = document.getElementById('div_AlertPlaceholder')
+
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = [
+    `<div class="alert alert-warning alert-dismissible" role="alert">`,
+    `   <div>${message}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    '</div>'
+  ].join('')
+
+  divID.append(wrapper)
+}
 
 
 /////////////// helper function
@@ -22,7 +37,7 @@ function _get_company_value(key) {
   return value;
 }
 
-function helper_update_company_info() {
+function helper_update_company_info_invoice() {
 
   var data = {
     'name': _get_company_value('company_name'),
@@ -37,6 +52,26 @@ function helper_update_company_info() {
   document.getElementById('companyWebsite').value = data['website'];
   document.getElementById('companyTel').value = data['tel'];
   document.getElementById('companyEmail').value = data['email'];
+
+  return data;
+}
+
+function helper_update_company_info_header() {
+
+  var data = {
+    'name': _get_company_value('company_name'),
+    'address': _get_company_value('company_address'),
+    'website': _get_company_value('company_website'),
+    'tel': _get_company_value('company_tel'),
+    'email': _get_company_value('company_email'),
+  };
+  console.log("updated header company info");
+  console.log(data);
+  document.getElementById('header_companyName').innerHTML = data['name'];
+  document.getElementById('header_companyAddress').innerHTML = data['address'];
+  document.getElementById('header_companyWebsite').innerHTML = data['website'];
+  document.getElementById('header_companyTel').innerHTML = data['tel'];
+  document.getElementById('header_companyEmail').innerHTML = data['email'];
 
   return data;
 }
@@ -74,27 +109,41 @@ function helper_logo_upload(image) {
   reader.readAsDataURL(image);
 
   reader.addEventListener('load', () => {
-    localStorage.setItem('companyLogo', reader.result);
+    localStorage.setItem('company_logo', reader.result);
   });
+
+  alert("<b>Image uploaded,</b> refresh the page for update");
 }
 
-function helper_logo_read() {
-  const logo = localStorage.getItem('companyLogo');
-
-  const id_logo = document.getElementById('InvoiceLogo');
-
+function helper_logo_load_header() {
+  const logo = localStorage.getItem('company_logo');
+  const id_logo_header = document.getElementById('header_companyLogo');
+  
   if (logo) {
-    console.log("Custom Logo..")
-    id_logo.setAttribute('src', logo);
-  } else {
-    console.log("Default Logo..")
-    id_logo.setAttribute('src', 'logo.png');
-  }
+    console.log("Heading Logo: Custom");
+    id_logo_header.setAttribute('src', logo);
+    } else {
+      console.log("Heading Logo: Default");
+    id_logo_header.setAttribute('src', 'logo.png');
+    }
+}
+
+function helper_logo_load_invoice() {
+  const logo = localStorage.getItem('company_logo');
+  const id_logo_header = document.getElementById('InvoiceLogo');
+  
+  if (logo) {
+    console.log("Heading Logo: Custom");
+    id_logo_header.setAttribute('src', logo);
+    } else {
+      console.log("Heading Logo: Default");
+    id_logo_header.setAttribute('src', 'logo.png');
+    }
 }
 
 /////////////// action hanlers 
 
-function action_modal_settings_clear() {
+function action_modal_settings_clear(event) {
   // clear local storage
   localStorage.clear();
   document.getElementById('bill_to').value = "-";
@@ -102,7 +151,7 @@ function action_modal_settings_clear() {
   location.reload();
 }
 
-function action_invoice_new() {
+function action_invoice_new(event) {
   //reload the page
   document.getElementById('bill_to').value = "-";
   document.getElementById('ship_to').value = "-";
@@ -110,6 +159,17 @@ function action_invoice_new() {
 }
 
 /////////////// modal form submit handler 
+
+function action_submit_modal_logo(event) {
+  // Prevent the form from submitting normally.
+  event.preventDefault();
+
+  // Close the modal.
+  $('#settingsModal').modal('hide');
+
+  // Return true to indicate that the form submission was successful.
+  return true;
+}
 
 function action_submit_modal_settings(event) {
   // Prevent the form from submitting normally.
@@ -129,6 +189,8 @@ function action_submit_modal_settings(event) {
 
   // Close the modal.
   $('#settingsModal').modal('hide');
+
+  alert("<b>Settings updated,</b> refresh page for updates");
 
   // Return true to indicate that the form submission was successful.
   return true;
@@ -205,7 +267,7 @@ function action_submit_invoice_preview(event) {
 
   json_data = {
     "type": bill_type[groupedData["type"]],
-    "company": helper_update_company_info(),
+    "company": helper_update_company_info_invoice(),
     "date": groupedData["invoice_date"],
     "invoice_id": invoice_id,
     "bill_to": groupedData["bill_to"][0],
@@ -228,7 +290,7 @@ function action_submit_invoice_preview(event) {
   //finally show the download button. 
   document.getElementById("download").className = "visible";
 
-  helper_logo_read();
+  helper_logo_load_invoice();
 }
 
 /////////////////// Export div to png
@@ -252,8 +314,13 @@ function action_invoice_download() {
 }
 
 ////////////////////////// Action hooks
-
-function action_invoice_row_delete() {
+function action_live_edit(event, id){
+  event.preventDefault(); // Prevent the form from submitting
+  console.log("action_live_edit");
+  console.log(event);
+  console.log(id);
+}
+function action_invoice_row_delete(event) {
   // Get the current row
   const currentRow = event.target.closest("tr");
 
@@ -264,6 +331,7 @@ function action_invoice_row_delete() {
 function action_invoice_add_row() {
   const template_table_row = `
   <tr>
+    <td style="width: 20px;"><button type="button" id="deleteRow" class="btn btn-link fw-bold link-danger text-decoration-none" onclick="return action_invoice_row_delete(event)"><i title="Remove item" class="bi bi-x-circle-fill"></i></button></td>
     <td colspan="2"><input type="text" name="name" value="Tiles" required style="width: 100%;"></td>
     <td><input type="number" name="hsn" value="69072100" style="width: 80px;"></td>
     <td><input type="number" name="mrp" value="125" style="width: 80px;"></td>
@@ -289,12 +357,12 @@ function action_invoice_add_row() {
       <option value="0">Exc</option>
     </select>
     </td>
-    <td><a id="deleteRow" class="fw-bold link-danger text-decoration-none" href="#" onclick="action_invoice_row_delete()">X</a></td>
   </tr>
   `;
   // compile the template
   var output = Handlebars.compile(template_table_row);
   $('#invoice_form').append(output);
+  console.log("form");
 }
 
 function template_invoice_create(json_data) {
@@ -306,9 +374,9 @@ function template_invoice_create(json_data) {
     <td colspan="3" class="border border-dark border-start-0">
       <b>{{company.name}}</b><br> 
       {{company.address}}<br>
-      <b>TEL:</b> {{company.tel}} <br>
-      {{#if company.email}}<b>E-Mail:</b> {{company.email}}{{/if}}
-      {{#if company.website}}, <b>Web:</b> {{company.website}}{{/if}}
+      <b>TEL:</b> {{company.tel}}<br>
+      {{#if company.email}}<b>E-Mail:</b> {{company.email}}{{/if}}<br>
+      {{#if company.website}}<b>Web:</b> {{company.website}}{{/if}}
     </td>
   </tr>
   <tr>
