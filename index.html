@@ -160,7 +160,6 @@
                       <button type="button" id="addRow" class="btn btn-light fs-5 fw-bold ms-1" onclick="action_invoice_add_row()"
                         data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add new item"><i
                           class="bi bi-plus-circle-fill" title="Add new item"></i></button>
-                          <button type="submit" class="btn btn-warning fs-5 fw-bold ms-1"><i class="bi bi-download" title="Preview and Download Invoice"></i></button>
                     </td>
                   </tr>
                 </tfoot>
@@ -170,7 +169,6 @@
               <div class="me-auto p-2">
                 <button type="submit" class="btn btn-warning fw-bold ms-1"><i class="bi bi-download"></i> Preview Invoice</button>
                 <button type="button" class="btn btn-primary fw-bold ms-1" onclick="return action_invoice_new(event);"><i class="bi bi-file-earmark-plus-fill"></i> New Invoice</button>
-                <button type="button" class="btn btn-light" onclick="action_modal_settings_clear()"><i class="bi bi-arrow-counterclockwise"></i> Clear Data</button>
               </div>
               <div class="align-self-center p-2">
                   <span class="pe-3">App by <a class="text-decoration-none" target="_blank"
@@ -255,8 +253,8 @@
     <div class="bg-light rounded-bottom text-center">
       <p class="py-2">
         <a id="downloadInvoice" class="btn btn-success fw-bold rounded-3 " href="#"
-          onclick="action_invoice_download()">Download
-          Invoice</a>
+          onclick="action_invoice_download()"><i class="bi bi-card-image"></i> Download
+          PNG Invoice</a>
       </p>
     </div>
   </div>
