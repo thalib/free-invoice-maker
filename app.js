@@ -334,8 +334,8 @@ function action_invoice_add_row() {
     <td style="width: 20px;"><button type="button" id="deleteRow" class="btn btn-link fw-bold link-danger text-decoration-none" onclick="return action_invoice_row_delete(event)"><i title="Remove item" class="bi bi-x-circle-fill"></i></button></td>
     <td colspan="2"><input type="text" name="name" value="Tiles" required style="width: 100%;"></td>
     <td><input type="number" name="hsn" value="69072100" style="width: 80px;"></td>
-    <td><input type="number" name="mrp" value="125" style="width: 80px;"></td>
-    <td><input type="number" name="rate" value="100" required style="width: 80px;"></td>
+    <td><input type="number" name="mrp" value="125" step="0.01" style="width: 80px;"></td>
+    <td><input type="number" name="rate" value="100" step="0.01" required style="width: 80px;"></td>
     <td>
       <input type="number" name="qty" value="1" required style="width: 80px;">
       <select name="unit">
