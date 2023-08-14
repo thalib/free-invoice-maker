@@ -282,6 +282,9 @@ function action_submit_invoice_preview(event) {
 
   if (groupedData["notes"][0].length)
     json_data["notes"] = groupedData["notes"][0]
+  
+  if (groupedData["terms"][0].length)
+    json_data["terms"] = groupedData["terms"][0]
 
   console.log(json_data);
 
@@ -380,19 +383,19 @@ function template_invoice_create(json_data) {
     </td>
   </tr>
   <tr>
-    <td colspan="2">
+    <td colspan="2" style="vertical-align: middle;">
       <b>No:</b> {{invoice_id}}<br>
-      <b>Order Date:</b> {{date}}
+      <b>Date:</b> {{date}}
     </td>
-    <td colspan="2"><h1>{{type}}</h1></td>
+    <td colspan="2" style="vertical-align: middle;"><h1>{{type}}</h1></td>
   </tr>
   <tr>
     <th colspan="2" style="width: 50%;">Billing To</th>
     <th colspan="2">{{#if ship_to}} Shipping To {{/if}}</th>
   </tr>
   <tr>
-    <td colspan="2">{{bill_to}}</td>
-    <td colspan="2">{{#if ship_to}} {{ship_to}} {{/if}}</td>
+    <td colspan="2">{{nl2br bill_to}}</td>
+    <td colspan="2">{{#if ship_to}} {{nl2br ship_to}} {{/if}}</td>
   </tr>`;
 
   const template_table_row = `
@@ -438,17 +441,22 @@ function template_invoice_create(json_data) {
   {{/if}}
   <tr>
     <td colspan="7" class="border border-dark">
-    {{#if notes}}<strong>Note:</strong><br>{{notes}}<br>{{/if}}
+    {{#if notes}}<strong>Note:</strong><br>{{nl2br notes}}<br>{{/if}}
+    {{#if terms}}
     <strong>Terms & Conditions:</strong><br>
-    - Dispatch: 2-15 working days from the date of payment<br>
-    - Payment Terms: 100% Advance<br>
-    - Transport: Exclusive (Buyer Scope)<br>
-    - Unloading Charges: Exclusive (Buyer Scope)<br>
-    - Price Validity: 2 working days<br>
-    - Tolerance: ± 0.5% for Weight, ± 5% for thickness & Qty is acceptable.<br>
+      {{nl2br terms}}
+    {{/if}}
     </td>
   </tr>`;
 
+  Handlebars.registerHelper('nl2br', function(text, isXhtml) {
+    const breakTag = isXhtml ? '<br />' : '<br>'
+    const withBr = Handlebars.escapeExpression(text).replace(
+      /([^>\r\n]?)(\r\n|\n\r|\r|\n)/g,
+      '$1' + breakTag + '$2'
+    )
+    return new Handlebars.SafeString(withBr)
+  })
 
   // compile the template
   $('#invoice_header').html("");

@@ -34,6 +34,8 @@
       helper_update_invoice_date();
       action_invoice_add_row();
 
+      autocomplete(document.getElementById("addItem_Input"), countries);
+
       const settingsModal = document.getElementById('settingsModal')
       settingsModal.addEventListener('shown.bs.modal', () => {
         helper_update_company_info_invoice();
@@ -113,18 +115,18 @@
                   </tr>
                   <tr>
                     <td colspan="2">
-                      <select name="type" style="width: 100%;">
-                        <option value="bil" selected>Bill</option>
+                      <select name="type" class="form-select" style="width: 100%;">
+                        <option value="est" selected>Estimate</option>
+                        <option value="bil">Bill</option>
                         <option value="inv">Invoice</option>
-                        <option value="est">Estimate</option>
                         <option value="emp">Empty</option>
                       </select>
                     </td>
-                    <td colspan="2"><input id="invoice_date" type="date" value="-" name="invoice_date"
+                    <td colspan="2"><input id="invoice_date" type="date" class="form-control" value="-" name="invoice_date"
                         style="width: 100%;" required></td>
-                    <td colspan="2"><input id="invoice_prefix" type="text" value="-" name="invoice_prefix"
+                    <td colspan="2"><input id="invoice_prefix" type="text" class="form-control" value="-" name="invoice_prefix"
                         style="width: 100%;" required></td>
-                    <td colspan="2"><input id="invoice_no" type="number" value="-" name="invoice_no"
+                    <td colspan="2"><input id="invoice_no" type="number" class="form-control" value="-" name="invoice_no"
                         style="width: 100%;" required></td>
                   </tr>
                   <tr>
@@ -133,11 +135,11 @@
                     <th colspan="2">Notes</th>
                   </tr>
                   <tr>
-                    <td colspan="3"><textarea id="bill_to" type="text" rows="2" name="bill_to"
+                    <td colspan="3"><textarea id="bill_to" type="text" class="form-control" rows="2" name="bill_to"
                         style="width: 100%;">-</textarea></td>
-                    <td colspan="3"><textarea id="ship_to" type="text" rows="2" name="ship_to"
+                    <td colspan="3"><textarea id="ship_to" type="text" class="form-control" rows="2" name="ship_to"
                         style="width: 100%;"></textarea></td>
-                    <td colspan="2"><textarea id="notes" type="text" rows="2" name="notes"
+                    <td colspan="2"><textarea id="notes" type="text" class="form-control" rows="2" name="notes"
                         style="width: 100%;"></textarea>
                     </td>
                   </tr>
@@ -157,11 +159,22 @@
                 <tfoot>
                   <tr>
                     <td colspan="8">
-                      <button type="button" id="addRow" class="btn btn-light fs-5 fw-bold ms-1" onclick="action_invoice_add_row()"
-                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add new item"><i
-                          class="bi bi-plus-circle-fill" title="Add new item"></i></button>
+                        <div class="input-group mb-3">
+                          <button type="button" id="addRow" class="btn btn-light btn-outline-secondary fs-5 fw-bold" onclick="action_invoice_add_row()"
+                              data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add new item"><i
+                                class="bi bi-plus-circle-fill" title="Add new item"></i></button>
+                        </div>                       
                     </td>
                   </tr>
+                  <td colspan="8">
+                    <textarea id="terms" name="terms" type="text" class="form-control" rows="6" style="width: 100%;">
+- Dispatch: 2-15 working days from the date of payment
+- Payment Terms: 100% Advance
+- Transport: Exclusive (Buyer Scope)
+- Unloading Charges: Exclusive (Buyer Scope)
+- Price Validity: 2 working days
+- Tolerance: ± 0.5% for Weight, ± 5% for thickness & Qty is acceptable.</textarea>
+                </td>
                 </tfoot>
               </table>
             </div>
