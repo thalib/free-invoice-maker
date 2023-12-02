@@ -50,7 +50,7 @@ function form_init() {
     document.getElementById('option_dark_mode').checked = false;
     localStorage.setItem('theme', 0);
     theme = 1;
-  } 
+  }
   action_theme_change(theme);
 
 }
@@ -63,7 +63,7 @@ function action_theme_change(status) {
   rootElement.setAttribute("data-bs-theme", theme);
 
   localStorage.setItem('theme', status);
-  document.getElementById('option_dark_mode').checked  = (status) ? true : false;
+  document.getElementById('option_dark_mode').checked = (status) ? true : false;
 }
 
 function action_clear_data(event, id) {
@@ -71,7 +71,7 @@ function action_clear_data(event, id) {
   event.preventDefault(); // Prevent the form from submitting
   document.getElementById(id).value = "";
   localStorage.removeItem(id);
-  console.log("action_clear_data() :" + id);
+  //console.log("action_clear_data() :" + id);
   location.reload();
 }
 
@@ -80,7 +80,6 @@ function action_invoice_new(event) {
   document.getElementById('inputBillTo').value = "-";
   invoice_no = document.getElementById('invoice_no').value;
   localStorage['invoice_no'] = parseInt(invoice_no, 10);
-  console.log(invoice_no);
   location.reload();
 }
 
@@ -93,9 +92,8 @@ function action_invoice_row_delete(event) {
 }
 
 
-
 function action_invoice_add_row(add_item) {
-  console.log(add_item);
+  //console.log(add_item);
 
   const template_table_row = `
   <div id="item-row" class="d-flex flex-column flex-md-row mb-3 border-bottom">
@@ -181,8 +179,8 @@ function action_submit_invoice_preview(event) {
   }, {});
 
   count = groupedData["name"].length;
-  console.log(formData);
-  console.log(groupedData);
+  //console.log(formData);
+  //console.log(groupedData);
 
   data = [];
   subtotal = 0.00;
@@ -219,7 +217,7 @@ function action_submit_invoice_preview(event) {
     subtotal += parseFloat(total);
   }
 
-  console.log(data);
+  //console.log(data);
 
   const bill_type = {
     'bil': "BILL",
@@ -248,7 +246,7 @@ function action_submit_invoice_preview(event) {
   if (groupedData["terms"][0].length)
     json_data["terms"] = groupedData["terms"][0]
 
-  console.log(json_data);
+  //console.log(json_data);
 
   document.getElementById("download").className = "visible";
 

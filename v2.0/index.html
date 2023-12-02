@@ -35,8 +35,8 @@
 
       // Get the select element
       const selectElement = document.getElementById("option_dark_mode");
-      selectElement.addEventListener("change", function(event) {
-        var status = (event.target.checked) ? 1: 0;
+      selectElement.addEventListener("change", function (event) {
+        var status = (event.target.checked) ? 1 : 0;
         action_theme_change(status);
       });
 
@@ -53,6 +53,7 @@
         if (e.keyCode === 13) {
           e.preventDefault();
           var add_item = document.getElementById('DataListAddItem').value;
+          console.log(document.getElementById('DataListAddItem'));
           action_invoice_add_row(add_item);
           document.getElementById('DataListAddItem').value = "";
         }
@@ -98,7 +99,8 @@
                 class="bi bi-file-earmark-plus-fill"></i> New Invoice</button>
           </div>
           <div class="form-check form-switch me-4">
-            <input name="option_dark_mode" class="form-check-input" type="checkbox" role="switch" id="option_dark_mode" checked>
+            <input name="option_dark_mode" class="form-check-input" type="checkbox" role="switch" id="option_dark_mode"
+              checked>
             <label class="form-check-label" for="option_dark_mode">Dark Mode</label>
           </div>
         </div>
@@ -111,19 +113,19 @@
       <form id="appForm" class="row g-3 m-2" onsubmit="return action_submit_invoice_preview(event);">
         <div class="col-12 col-md-6">
           <label for="company_name" class="form-label">
-            Company Name <a href="#" title="Reset" onclick="action_clear_data(event, 'company_name')"><i class="bi bi-arrow-clockwise"></i></a>
+            Company Name <a href="#" title="Reset" onclick="action_clear_data(event, 'company_name')"><i
+                class="bi bi-arrow-clockwise"></i></a>
           </label>
           <input name="company_name" id="company_name" type="text" class="form-control" value="DEVNODES ENTERPRISES">
         </div>
         <div class="col-12 col-md-6">
           <label for="company_addr" class="form-label">
-            Company Address <a href="#" title="Reset" onclick="action_clear_data(event, 'company_addr')"><i class="bi bi-arrow-clockwise"></i></a>
+            Company Address <a href="#" title="Reset" onclick="action_clear_data(event, 'company_addr')"><i
+                class="bi bi-arrow-clockwise"></i></a>
           </label>
-          <textarea name="company_addr" id="company_addr" type="text" class="form-control" rows="1">(An Unit of ASENSAR AUTOMATION PVT. LTD.)
-Chennai, Tamil Nadu, PIN - 600125.
-
-TEL: 9940 198 130 , Email: support@deltaware.in
-Website: www.deltaware.in </textarea>
+          <textarea name="company_addr" id="company_addr" type="text" class="form-control" rows="1">India, PIN - 112233.
+TEL: 9876 543 210 , Email: support@devnodes.in
+Website: www.devnodes.in </textarea>
         </div>
         <div class="col-6 col-md-3">
           <label for="inputType" class="form-label">Document Type</label>
@@ -140,13 +142,15 @@ Website: www.deltaware.in </textarea>
         </div>
         <div class="col-6 col-md-3">
           <label for="invoice_prefix" class="form-label">
-            Invoice Prefix <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_prefix')"><i class="bi bi-arrow-clockwise"></i></a>
+            Invoice Prefix <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_prefix')"><i
+                class="bi bi-arrow-clockwise"></i></a>
           </label>
           <input name="invoice_prefix" id="invoice_prefix" type="text" class="form-control">
         </div>
         <div class="col-6 col-md-3">
           <label for="invoice_no" class="form-label">
-            Invoice Number <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_no')"><i class="bi bi-arrow-clockwise"></i></a>
+            Invoice Number <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_no')"><i
+                class="bi bi-arrow-clockwise"></i></a>
           </label>
           <input name="invoice_no" id="invoice_no" type="number" class="form-control">
         </div>
@@ -159,11 +163,13 @@ Website: www.deltaware.in </textarea>
         <div class="col-md-12">
           <div class="d-flex flex-sm-row flex-column">
             <div class="form-check form-switch me-4">
-              <input name="option_inc_tax" class="form-check-input" type="checkbox" role="switch" id="inputIncTax" value="1" checked>
+              <input name="option_inc_tax" class="form-check-input" type="checkbox" role="switch" id="inputIncTax"
+                value="1" checked>
               <label class="form-check-label" for="inputIncTax">Inc. Tax</label>
             </div>
             <div class="form-check form-switch">
-              <input name="option_show_save" class="form-check-input" type="checkbox" role="switch" id="inputIncTax" value="1">
+              <input name="option_show_save" class="form-check-input" type="checkbox" role="switch" id="inputIncTax"
+                value="1">
               <label class="form-check-label" for="inputIncTax">Show Savings</label>
             </div>
           </div>
@@ -196,7 +202,8 @@ Website: www.deltaware.in </textarea>
           </div>
           <div class="align-self-center fw-bold p-2">
             <a class="text-decoration-none fw-bold" target="_blank"
-                href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">App by Devnodes.in</a>
+              href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">App
+              by Devnodes.in</a>
           </div>
         </div>
 
@@ -205,29 +212,34 @@ Website: www.deltaware.in </textarea>
   </main>
 
   <datalist id="DataListOptions_AddItem">
-    <option value="TATA Chain Link Fence">
-    <option value="TATA Knotted Fence">
-    <option value="TATA Stambh Post">
-    <option value="TATA Wiron GI Wire">
-    <option value="Bestwire GI Wire">
+    <option value="TATA Chain Link Fence"></option>
+    <option value="TATA Knotted Fence"></option>
+    <option value="TATA Stambh Post"></option>
+    <option value="TATA Wiron GI Wire"></option>
+    <option value="TATA Brabed Wire"></option>
+    <option value="GI Wire"></option>
+    <option value="Cool Roof Tiles"></option>
+    <option value="KAG Cool Roof Tiles"></option>
   </datalist>
 
   <div id="download" class="invisible">
-    <div class="bg-light rounded-bottom text-center">
-      <p class="py-2">
-        <a id="downloadInvoice" class="btn btn-success fw-bold rounded-3 " href="#"
-          onclick="action_invoice_download()"><i class="bi bi-card-image"></i> Download
-          PNG Invoice</a>
-      </p>
+    <div class="container">
+      <div class="rounded-bottom text-center">
+        <p class="py-2">
+          <a id="downloadInvoice" class="btn btn-success fw-bold rounded-3 " href="#"
+            onclick="action_invoice_download()"><i class="bi bi-card-image"></i> Download
+            PNG Invoice</a>
+        </p>
+      </div>
     </div>
   </div>
 
-  <footer id="invoice_output" class="container p-1 bg-light text-black" style="max-width: 850px; width: 850px;">
+  <footer id="invoice_output" class="container p-1 bg-light text-dark" style="max-width: 850px; width: 850px;">
     <div id="invoice_header" class="row">
-      
+
     </div>
     <div id="invoice_body" class="row">
-      
+
     </div>
   </footer>
 
