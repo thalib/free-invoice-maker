@@ -16,20 +16,72 @@ function alert(message) {
   divID.append(wrapper)
 }
 
+function read_data_string(id) {
+  var value = localStorage.getItem(id);
+  if (value === null) {
+    value = document.getElementById(id).defaultValue;
+  }
+  document.getElementById(id).value = String(value);
+}
+
 
 function form_init() {
+
   const today = new Date();
-  document.getElementById('inputDate').value = today.toISOString().substring(0, 10);
+  document.getElementById('invoice_date').value = today.toISOString().substring(0, 10);
 
-  var invoice_prefix = localStorage.getItem("inputInvPrefix");
-  invoice_prefix = (invoice_prefix === null) ? ('DE' + (new Date()).getFullYear()) : localStorage['inputInvPrefix'];
-  document.getElementById('inputInvPrefix').value = String(invoice_prefix);
+  var invoice_prefix = localStorage.getItem("invoice_prefix");
+  if (invoice_prefix === null) {
+    prefix_year_month = (((new Date()).getFullYear() % 100) * 100) + ((new Date()).getMonth() + 1);
+    invoice_prefix = (invoice_prefix === null) ? ('DE' + prefix_year_month) : localStorage['invoice_prefix'];
+  }
+  document.getElementById('invoice_prefix').value = String(invoice_prefix);
 
 
-  var invoice_no = parseInt(localStorage['inputInvNumber'], 10);
-  invoice_no = isNaN(invoice_no) ? 0 : invoice_no++;
-  document.getElementById('inputInvNumber').value = String(invoice_no).padStart(3, '0'); // '009';
+  var invoice_no = parseInt(localStorage.getItem('invoice_no'), 10);
+  invoice_no = isNaN(invoice_no) ? 1 : ++invoice_no;
+  document.getElementById('invoice_no').value = String(invoice_no).padStart(2, '0'); // '009';
 
+  read_data_string('company_name');
+  read_data_string('company_addr');
+
+  var theme = parseInt(localStorage.getItem('theme'), 10);
+  if (isNaN(theme)) {
+    document.getElementById('option_dark_mode').checked = false;
+    localStorage.setItem('theme', 0);
+    theme = 1;
+  } 
+  action_theme_change(theme);
+
+}
+
+function action_theme_change(status) {
+
+  var theme = (status) ? "dark" : "light";
+
+  const rootElement = document.documentElement;
+  rootElement.setAttribute("data-bs-theme", theme);
+
+  localStorage.setItem('theme', status);
+  document.getElementById('option_dark_mode').checked  = (status) ? true : false;
+}
+
+function action_clear_data(event, id) {
+  //reload the page
+  event.preventDefault(); // Prevent the form from submitting
+  document.getElementById(id).value = "";
+  localStorage.removeItem(id);
+  console.log("action_clear_data() :" + id);
+  location.reload();
+}
+
+function action_invoice_new(event) {
+  //reload the page
+  document.getElementById('inputBillTo').value = "-";
+  invoice_no = document.getElementById('invoice_no').value;
+  localStorage['invoice_no'] = parseInt(invoice_no, 10);
+  console.log(invoice_no);
+  location.reload();
 }
 
 function action_invoice_row_delete(event) {
@@ -39,6 +91,7 @@ function action_invoice_row_delete(event) {
   // Remove the row from the table
   currentRow.remove();
 }
+
 
 
 function action_invoice_add_row(add_item) {
@@ -112,8 +165,6 @@ function action_invoice_add_row(add_item) {
 function action_submit_invoice_preview(event) {
   event.preventDefault(); // Prevent the form from submitting
 
-  //alert("wow");
-
   var form = event.target; // Get the form element
   var formData = new FormData(form); // Create a new FormData object
 
@@ -177,9 +228,6 @@ function action_submit_invoice_preview(event) {
     'emp': "",
   };
 
-  localStorage['invoice_no'] = parseInt(groupedData["invoice_no"], 10);
-  localStorage['invoice_prefix'] = groupedData["invoice_prefix"];
-
   var invoice_id = groupedData["invoice_prefix"] + groupedData["invoice_no"];
 
   if (isNaN(total_saving)) total_saving = 0;
@@ -205,8 +253,14 @@ function action_submit_invoice_preview(event) {
   document.getElementById("download").className = "visible";
 
   template_invoice_create(json_data);
-  
+
   document.getElementById("invoice_output").scrollIntoView();
+
+  /* Finally: Save the value */
+  localStorage.setItem('invoice_no', parseInt(groupedData["invoice_no"], 10));
+  localStorage.setItem('invoice_prefix', groupedData["invoice_prefix"]);
+  localStorage.setItem('company_name', groupedData["company_name"]);
+  localStorage.setItem('company_addr', groupedData["company_addr"]);
 }
 
 function template_invoice_create(json_data) {
@@ -307,8 +361,8 @@ function action_invoice_download() {
   // Get the div element.
 
   const div = document.getElementById("invoice_output");
-  const invoice_prefix = document.getElementById('inputInvPrefix').value;
-  const invoice_no = document.getElementById('inputInvNumber').value;
+  const invoice_prefix = document.getElementById('invoice_prefix').value;
+  const invoice_no = document.getElementById('invoice_no').value;
   const filename = invoice_prefix + invoice_no + ".jpg";
   html2canvas(div).then(function (canvas) {
     var element_link = document.createElement("a");

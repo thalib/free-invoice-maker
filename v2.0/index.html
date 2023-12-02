@@ -15,7 +15,7 @@
   <link rel="icon" href="./favicon.ico">
   <meta name="theme-color" content="#8e44ad">
 
-
+  <!--
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
     crossorigin="anonymous"></script>
@@ -23,10 +23,22 @@
     integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
   <script src=" https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js "></script>
+  -->
+  <script src="./asset/js/bootstrap.bundle.min.js"></script>
+  <script src="./asset/js/jquery-2.0.3.min.js"></script>
+  <script src="./asset/js/handlebars.min-v4.7.8.js"></script>
+  <script src="./asset/js/html2canvas.min.js"></script>
   <script src="./app.js"></script>
 
   <script type="text/javascript">
     function onloadFunction() {
+
+      // Get the select element
+      const selectElement = document.getElementById("option_dark_mode");
+      selectElement.addEventListener("change", function(event) {
+        var status = (event.target.checked) ? 1: 0;
+        action_theme_change(status);
+      });
 
       form_init();
       const appForm = document.getElementById('appForm');
@@ -54,8 +66,7 @@
   </script>
 
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link href="./asset/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link href="./style.css" rel="stylesheet">
 
@@ -71,7 +82,7 @@
       <div class="row">
         <div class="col-12 align-self-center">
           <h1 class="fs-5 fw-semibold text-center">Free Invoice Creator Web App</h1>
-          <p class="text-center pb-2 border-bottom"><span class="pe-3">App by <a class="text-decoration-none"
+          <p class="text-center pb-2 border-bottom"><span class="pe-3">App v2.0 by <a class="text-decoration-none"
                 target="_blank"
                 href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">Devnodes.in</a></span>
           </p>
@@ -81,12 +92,14 @@
         <div id="appNotifications"></div>
       </div> <!-- div row -->
       <div id='appMenu' class="row">
-        <div class="d-flex border-top border-bottom">
+        <div class="d-flex align-items-center py-2 border-top border-bottom">
           <div class="me-auto">
-            <button type="button" class="btn btn-light fw-bold ms-1" onclick="return action_invoice_new(event);"><i
+            <button type="button" class="btn btn-primary fw-bold ms-1" onclick="return action_invoice_new(event);"><i
                 class="bi bi-file-earmark-plus-fill"></i> New Invoice</button>
-            <button type="button" class="btn btn-light fw-bold ms-1" onclick="#"><i
-                class="bi bi-file-earmark-plus-fill"></i> About</button>
+          </div>
+          <div class="form-check form-switch me-4">
+            <input name="option_dark_mode" class="form-check-input" type="checkbox" role="switch" id="option_dark_mode" checked>
+            <label class="form-check-label" for="option_dark_mode">Dark Mode</label>
           </div>
         </div>
       </div> <!-- div row -->
@@ -97,18 +110,20 @@
       </div> <!-- div row -->
       <form id="appForm" class="row g-3 m-2" onsubmit="return action_submit_invoice_preview(event);">
         <div class="col-12 col-md-6">
-          <label for="inputCompanyName" class="form-label">Company Name</label>
-          <input name="company_name" id="inputCompanyName" type="text" class="form-control" value="DEVNODES ENTERPRISES">
+          <label for="company_name" class="form-label">
+            Company Name <a href="#" title="Reset" onclick="action_clear_data(event, 'company_name')"><i class="bi bi-arrow-clockwise"></i></a>
+          </label>
+          <input name="company_name" id="company_name" type="text" class="form-control" value="DEVNODES ENTERPRISES">
         </div>
         <div class="col-12 col-md-6">
-          <label for="inputCompanyAddress" class="form-label">Company Address</label>
-          <textarea name="company_addr" id="inputCompanyAddress" type="text" class="form-control" rows="1">
-(An Unit of ASENSAR AUTOMATION PVT. LTD.)
+          <label for="company_addr" class="form-label">
+            Company Address <a href="#" title="Reset" onclick="action_clear_data(event, 'company_addr')"><i class="bi bi-arrow-clockwise"></i></a>
+          </label>
+          <textarea name="company_addr" id="company_addr" type="text" class="form-control" rows="1">(An Unit of ASENSAR AUTOMATION PVT. LTD.)
 Chennai, Tamil Nadu, PIN - 600125.
 
 TEL: 9940 198 130 , Email: support@deltaware.in
-Website: www.deltaware.in
-          </textarea>
+Website: www.deltaware.in </textarea>
         </div>
         <div class="col-6 col-md-3">
           <label for="inputType" class="form-label">Document Type</label>
@@ -120,16 +135,20 @@ Website: www.deltaware.in
           </select>
         </div>
         <div class="col-6 col-md-3">
-          <label for="inputDate" class="form-label">Date</label>
-          <input name="date" id="inputDate" type="date" class="form-control">
+          <label for="invoice_date" class="form-label">Date</label>
+          <input name="date" id="invoice_date" type="date" class="form-control">
         </div>
         <div class="col-6 col-md-3">
-          <label for="inputInvPrefix" class="form-label">Invoice Prefix</label>
-          <input name="invoice_prefix" id="inputInvPrefix" type="text" class="form-control">
+          <label for="invoice_prefix" class="form-label">
+            Invoice Prefix <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_prefix')"><i class="bi bi-arrow-clockwise"></i></a>
+          </label>
+          <input name="invoice_prefix" id="invoice_prefix" type="text" class="form-control">
         </div>
         <div class="col-6 col-md-3">
-          <label for="inputInvNumber" class="form-label">Invoice Number</label>
-          <input name="invoice_no" id="inputInvNumber" type="number" class="form-control">
+          <label for="invoice_no" class="form-label">
+            Invoice Number <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_no')"><i class="bi bi-arrow-clockwise"></i></a>
+          </label>
+          <input name="invoice_no" id="invoice_no" type="number" class="form-control">
         </div>
 
         <div class="col-md-12">
@@ -167,6 +186,7 @@ Website: www.deltaware.in
 - Transport: Exclusive (Buyer Scope)
 - Unloading Charges: Exclusive (Buyer Scope)
 - Price Validity: 2 working days
+- Price are ExFactory/ExDepot Price
 - Tolerance: ± 0.5% for Weight, ± 5% for thickness & Qty is acceptable.</textarea>
         </div>
         <div class="d-flex mt-4">
@@ -202,7 +222,7 @@ Website: www.deltaware.in
     </div>
   </div>
 
-  <footer id="invoice_output" class="container p-1" style="max-width: 850px; width: 850px;">
+  <footer id="invoice_output" class="container p-1 bg-light text-black" style="max-width: 850px; width: 850px;">
     <div id="invoice_header" class="row">
       
     </div>
