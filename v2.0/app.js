@@ -2,19 +2,6 @@
 
 // Show notification using bootstrap alert
 
-function alert(message) {
-  const divID = document.getElementById('div_AlertPlaceholder')
-
-  const wrapper = document.createElement('div')
-  wrapper.innerHTML = [
-    `<div class="alert alert-warning alert-dismissible" role="alert">`,
-    `   <div>${message}</div>`,
-    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
-    '</div>'
-  ].join('')
-
-  divID.append(wrapper)
-}
 
 function read_data_string(id) {
   var value = localStorage.getItem(id);
@@ -24,8 +11,41 @@ function read_data_string(id) {
   document.getElementById(id).value = String(value);
 }
 
+function show_app() {
+  document.getElementById("login").className = "d-none";
+  document.getElementById("invoice_app").className = "visible";
+  document.getElementById("invoice_output").className = "invisible";
+}
+
+function action_login(event) {
+
+  event.preventDefault(); // Prevent the form from submitting
+
+  const username = document.getElementById("login_name").value;
+  const password = document.getElementById("login_pass").value;
+
+  if (password === "thalib") {
+    show_app();
+    localStorage.setItem('login', 1);
+  } else {
+    alert("Invalid username or password.");
+  }
+
+}
 
 function form_init() {
+
+  const enable_login = false;
+  if (enable_login) {
+    var login = parseInt(localStorage.getItem('login'), 10);
+    if (login) {
+      show_app();
+    } else {
+      document.getElementById("login").className = "";
+    }
+  } else {
+    show_app();
+  }
 
   const today = new Date();
   document.getElementById('invoice_date').value = today.toISOString().substring(0, 10);
@@ -148,8 +168,7 @@ function action_invoice_add_row(add_item) {
       </div>
     
     </div>
-    
-  
+ 
   </div>
   `;
 
@@ -248,7 +267,7 @@ function action_submit_invoice_preview(event) {
 
   //console.log(json_data);
 
-  document.getElementById("download").className = "visible";
+  document.getElementById("invoice_output").className = "visible";
 
   template_invoice_create(json_data);
 
@@ -358,7 +377,7 @@ function template_invoice_create(json_data) {
 function action_invoice_download() {
   // Get the div element.
 
-  const div = document.getElementById("invoice_output");
+  const div = document.getElementById("invoice_image");
   const invoice_prefix = document.getElementById('invoice_prefix').value;
   const invoice_no = document.getElementById('invoice_no').value;
   const filename = invoice_prefix + invoice_no + ".jpg";

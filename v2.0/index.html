@@ -78,115 +78,141 @@
 </head>
 
 <body>
-  <main id="invoice_app" class="container-fluid py-4">
-    <div class="border border-secondary-subtle rounded-1 py-3">
-      <div class="row">
-        <div class="col-12 align-self-center">
-          <h1 class="fs-5 fw-semibold text-center">Free Invoice Creator Web App</h1>
-          <p class="text-center pb-2 border-bottom"><span class="pe-3">App v2.0 by <a class="text-decoration-none"
-                target="_blank"
-                href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">Devnodes.in</a></span>
-          </p>
+  <header id="login" class="d-none">
+    <div class="container pt-5" style="max-width: 300px; width: 300px;">
+      <div class="row align-items-center">
+        <div class="col border rounded py-2">
+          <form id="loginForm" onclick="return action_login(event);">
+            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+            <div class="form-floating">
+              <input type="text" class="form-control" id="login_name" placeholder="name@example.com">
+              <label for="login_name">Username</label>
+            </div>
+            <div class="form-floating">
+              <input type="password" class="form-control" id="login_pass" placeholder="Password">
+              <label for="login_pass">Password</label>
+            </div>
+            <div class="mt-5">
+              <button type="submit" class="btn btn-primary pt-2"><i class="bi bi-box-arrow-in-left"></i> Sign
+                in</button>
+            </div>
+          </form>
         </div>
-      </div> <!-- div row -->
-      <div class="row">
-        <div id="appNotifications"></div>
-      </div> <!-- div row -->
-      <div id='appMenu' class="row">
-        <div class="d-flex align-items-center py-2 border-top border-bottom">
-          <div class="me-auto">
-            <button type="button" class="btn btn-primary fw-bold ms-1" onclick="return action_invoice_new(event);"><i
-                class="bi bi-file-earmark-plus-fill"></i> New Invoice</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="invoice_app" class="d-none">
+    <div class="container-fluid py-4">
+      <div class="border border-secondary-subtle rounded-1 py-3">
+        <div class="row">
+          <div class="col-12 align-self-center">
+            <h1 class="fs-5 fw-semibold text-center">Free Invoice Creator Web App</h1>
+            <p class="text-center pb-2 border-bottom"><span class="pe-3">App v2.0 by <a class="text-decoration-none"
+                  target="_blank"
+                  href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">Devnodes.in</a></span>
+            </p>
           </div>
-          <div class="form-check form-switch me-4">
-            <input name="option_dark_mode" class="form-check-input" type="checkbox" role="switch" id="option_dark_mode"
-              checked>
-            <label class="form-check-label" for="option_dark_mode">Dark Mode</label>
-          </div>
-        </div>
-      </div> <!-- div row -->
-
-      <div class="row">
-        <div class="col-12 align-self-center">
-        </div>
-      </div> <!-- div row -->
-      <form id="appForm" class="row g-3 m-2" onsubmit="return action_submit_invoice_preview(event);">
-        <div class="col-12 col-md-6">
-          <label for="company_name" class="form-label">
-            Company Name <a href="#" title="Reset" onclick="action_clear_data(event, 'company_name')"><i
-                class="bi bi-arrow-clockwise"></i></a>
-          </label>
-          <input name="company_name" id="company_name" type="text" class="form-control" value="DEVNODES ENTERPRISES">
-        </div>
-        <div class="col-12 col-md-6">
-          <label for="company_addr" class="form-label">
-            Company Address <a href="#" title="Reset" onclick="action_clear_data(event, 'company_addr')"><i
-                class="bi bi-arrow-clockwise"></i></a>
-          </label>
-          <textarea name="company_addr" id="company_addr" type="text" class="form-control" rows="1">India, PIN - 112233.
-TEL: 9876 543 210 , Email: support@devnodes.in
-Website: www.devnodes.in </textarea>
-        </div>
-        <div class="col-6 col-md-3">
-          <label for="inputType" class="form-label">Document Type</label>
-          <select name="type" class="form-select" id="inputType">
-            <option value="est" selected>Estimate</option>
-            <option value="bil">Bill</option>
-            <option value="inv">Invoice</option>
-            <option value="emp">Empty</option>
-          </select>
-        </div>
-        <div class="col-6 col-md-3">
-          <label for="invoice_date" class="form-label">Date</label>
-          <input name="date" id="invoice_date" type="date" class="form-control">
-        </div>
-        <div class="col-6 col-md-3">
-          <label for="invoice_prefix" class="form-label">
-            Invoice Prefix <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_prefix')"><i
-                class="bi bi-arrow-clockwise"></i></a>
-          </label>
-          <input name="invoice_prefix" id="invoice_prefix" type="text" class="form-control">
-        </div>
-        <div class="col-6 col-md-3">
-          <label for="invoice_no" class="form-label">
-            Invoice Number <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_no')"><i
-                class="bi bi-arrow-clockwise"></i></a>
-          </label>
-          <input name="invoice_no" id="invoice_no" type="number" class="form-control">
-        </div>
-
-        <div class="col-md-12">
-          <label for="inputBillTo" class="form-label">Bill To</label>
-          <textarea name="bill_to" id="inputBillTo" type="text" class="form-control" rows="1">-</textarea>
-        </div>
-
-        <div class="col-md-12">
-          <div class="d-flex flex-sm-row flex-column">
+        </div> <!-- div row -->
+        <div class="row">
+          <div id="appNotifications"></div>
+        </div> <!-- div row -->
+        <div id='appMenu' class="row">
+          <div class="d-flex align-items-center py-2 border-top border-bottom">
+            <div class="me-auto">
+              <button type="button" class="btn btn-primary fw-bold ms-1" onclick="return action_invoice_new(event);"><i
+                  class="bi bi-file-earmark-plus-fill"></i> New Invoice</button>
+            </div>
             <div class="form-check form-switch me-4">
-              <input name="option_inc_tax" class="form-check-input" type="checkbox" role="switch" id="inputIncTax"
-                value="1" checked>
-              <label class="form-check-label" for="inputIncTax">Inc. Tax</label>
-            </div>
-            <div class="form-check form-switch">
-              <input name="option_show_save" class="form-check-input" type="checkbox" role="switch" id="inputIncTax"
-                value="1">
-              <label class="form-check-label" for="inputIncTax">Show Savings</label>
+              <input name="option_dark_mode" class="form-check-input" type="checkbox" role="switch"
+                id="option_dark_mode" checked>
+              <label class="form-check-label" for="option_dark_mode">Dark Mode</label>
             </div>
           </div>
-        </div>
+        </div> <!-- div row -->
 
-        <div class="col-md-12 pt-3 border-top border-3">
-          <div id="inputProductItem"></div>
-        </div>
+        <div class="row">
+          <div class="col-12 align-self-center">
+          </div>
+        </div> <!-- div row -->
+        <form id="appForm" class="row g-3 m-2" onsubmit="return action_submit_invoice_preview(event);">
+          <div class="col-12 col-md-6">
+            <label for="company_name" class="form-label">
+              Company Name <a href="#" title="Reset" onclick="action_clear_data(event, 'company_name')"><i
+                  class="bi bi-arrow-clockwise"></i></a>
+            </label>
+            <input name="company_name" id="company_name" type="text" class="form-control" value="DEVNODES ENTERPRISES">
+          </div>
+          <div class="col-12 col-md-6">
+            <label for="company_addr" class="form-label">
+              Company Address <a href="#" title="Reset" onclick="action_clear_data(event, 'company_addr')"><i
+                  class="bi bi-arrow-clockwise"></i></a>
+            </label>
+            <textarea name="company_addr" id="company_addr" type="text" class="form-control" rows="1">India. PIN - 654321.
+TEL: 987654321, Email: support@example.in
+Website: www.devnodes.in </textarea>
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="inputType" class="form-label">Document Type</label>
+            <select name="type" class="form-select" id="inputType">
+              <option value="est" selected>Estimate</option>
+              <option value="bil">Bill</option>
+              <option value="inv">Invoice</option>
+              <option value="emp">Empty</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="invoice_date" class="form-label">Date</label>
+            <input name="date" id="invoice_date" type="date" class="form-control">
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="invoice_prefix" class="form-label">
+              Invoice Prefix <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_prefix')"><i
+                  class="bi bi-arrow-clockwise"></i></a>
+            </label>
+            <input name="invoice_prefix" id="invoice_prefix" type="text" class="form-control">
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="invoice_no" class="form-label">
+              Invoice Number <a href="#" title="Reset" onclick="action_clear_data(event, 'invoice_no')"><i
+                  class="bi bi-arrow-clockwise"></i></a>
+            </label>
+            <input name="invoice_no" id="invoice_no" type="number" class="form-control">
+          </div>
 
-        <div class="col-md-12">
-          <input id="DataListAddItem" class="form-control" list="DataListOptions_AddItem"
-            placeholder="Type to search...">
-        </div>
+          <div class="col-md-12">
+            <label for="inputBillTo" class="form-label">Bill To</label>
+            <textarea name="bill_to" id="inputBillTo" type="text" class="form-control" rows="1">-</textarea>
+          </div>
 
-        <div class="col-md-12">
-          <label for="inputTerms" class="form-label">Terms</label>
-          <textarea name="terms" id="inputTerms" type="text" class="form-control" rows="6">
+          <div class="col-md-12">
+            <div class="d-flex flex-sm-row flex-column">
+              <div class="form-check form-switch me-4">
+                <input name="option_inc_tax" class="form-check-input" type="checkbox" role="switch" id="inputIncTax"
+                  value="1" checked>
+                <label class="form-check-label" for="inputIncTax">Inc. Tax</label>
+              </div>
+              <div class="form-check form-switch">
+                <input name="option_show_save" class="form-check-input" type="checkbox" role="switch" id="inputIncTax"
+                  value="1">
+                <label class="form-check-label" for="inputIncTax">Show Savings</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12 pt-3 border-top border-3">
+            <div id="inputProductItem"></div>
+          </div>
+
+          <div class="col-md-12">
+            <input id="DataListAddItem" class="form-control border border-warning" list="DataListOptions_AddItem"
+              placeholder="Search or Type products name...">
+          </div>
+
+          <div class="col-md-12">
+            <label for="inputTerms" class="form-label">Terms</label>
+            <textarea name="terms" id="inputTerms" type="text" class="form-control" rows="6">
 - Dispatch: 2-15 working days from the date of payment
 - Payment Terms: 100% Advance
 - Transport: Exclusive (Buyer Scope)
@@ -194,21 +220,22 @@ Website: www.devnodes.in </textarea>
 - Price Validity: 2 working days
 - Price are ExFactory/ExDepot Price
 - Tolerance: ± 0.5% for Weight, ± 5% for thickness & Qty is acceptable.</textarea>
-        </div>
-        <div class="d-flex mt-4">
-          <div class="me-auto">
-            <button type="submit" class="btn btn-warning fw-bold ms-1"><i class="bi bi-binoculars"></i> Preview
-              Invoice</button>
           </div>
-          <div class="align-self-center fw-bold p-2">
-            <a class="text-decoration-none fw-bold" target="_blank"
-              href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">App
-              by Devnodes.in</a>
+          <div class="d-flex mt-4">
+            <div class="me-auto">
+              <button type="submit" class="btn btn-warning fw-bold ms-1"><i class="bi bi-binoculars"></i> Preview
+                Invoice</button>
+            </div>
+            <div class="align-self-center fw-bold p-2">
+              <a class="text-decoration-none fw-bold" target="_blank"
+                href="https://devnodes.in/blog/project/free-invoice-maker/?utm_source=invoicemaker&utm_medium=github">App
+                by Devnodes.in</a>
+            </div>
           </div>
-        </div>
 
-      </form>
-    </div> <!-- div border -->
+        </form>
+      </div> <!-- div border -->
+    </div> <!-- div container -->
   </main>
 
   <datalist id="DataListOptions_AddItem">
@@ -222,24 +249,26 @@ Website: www.devnodes.in </textarea>
     <option value="KAG Cool Roof Tiles"></option>
   </datalist>
 
-  <div id="download" class="invisible">
-    <div class="container">
-      <div class="rounded-bottom text-center">
-        <p class="py-2">
-          <a id="downloadInvoice" class="btn btn-success fw-bold rounded-3 " href="#"
-            onclick="action_invoice_download()"><i class="bi bi-card-image"></i> Download
-            PNG Invoice</a>
-        </p>
+  <footer id="invoice_output" class="d-none">
+    <div id="download">
+      <div class="container">
+        <div class="rounded-bottom text-center">
+          <p class="py-2">
+            <a id="downloadInvoice" class="btn btn-success fw-bold rounded-3 " href="#"
+              onclick="action_invoice_download()"><i class="bi bi-card-image"></i> Download
+              PNG Invoice</a>
+          </p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <footer id="invoice_output" class="container p-1 bg-light text-dark" style="max-width: 850px; width: 850px;">
-    <div id="invoice_header" class="row">
+    <div id="invoice_image" class="container p-1 bg-light text-dark px-5" style="max-width: 850px; width: 850px;">
+      <div id="invoice_header" class="row">
 
-    </div>
-    <div id="invoice_body" class="row">
+      </div>
+      <div id="invoice_body" class="row">
 
+      </div>
     </div>
   </footer>
 
