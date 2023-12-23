@@ -20,6 +20,7 @@
   <script src="./asset/js/handlebars.min-v4.7.8.js"></script>
   <script src="./asset/js/html2canvas.min.js"></script>
   <script src="./app.js"></script>
+  <script src="./company.js"></script>
 
   <script type="text/javascript">
     function onloadFunction() {
@@ -51,6 +52,10 @@
       });
 
       action_invoice_add_row("TATA Chain Link Fence");
+
+      if (typeof update_company_settings === "function") { 
+        update_company_settings();
+      }
 
       console.log("loaded...");
     }
