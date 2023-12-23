@@ -156,7 +156,7 @@ function action_invoice_add_row(add_item) {
         </div>
         <div class="input-group mb-3" style="width: 130px;">
           <span class="input-group-text fw-semibold">Rate</span>
-          <input type="number" name="rate" value="0" step="0.01" class="form-control" required>
+          <input type="number" name="rate" value="100" step="0.01" class="form-control" required>
         </div>
       </div>
 
@@ -201,42 +201,47 @@ function action_submit_invoice_preview(event) {
   //console.log(formData);
   //console.log(groupedData);
 
-  data = [];
+  item_list = [];
   subtotal = 0.00;
-  total_saving = 0.00;
   total_gst = 0.00;
+  total_invoice = 0.00;
 
   for (i = 0; i < count; i++) {
     incTax = ("option_inc_tax" in groupedData) ? 1 : 0;
-    mrp = parseFloat(groupedData["mrp"][i]);
-    rate = parseFloat(groupedData["rate"][i]);
-    discount = ((mrp - rate) / mrp) * 100;
-    gst_p = parseInt(groupedData["tax"][i]);
-    rate_w_gst = (rate + (rate * (gst_p / 100)));
-    qty = parseFloat(groupedData["qty"][i]);
-    total = incTax ? (rate * qty).toFixed(2) : (rate_w_gst * qty).toFixed(2);
+    showSubtotal = ("option_show_subtotal" in groupedData) ? 1 : 0;
+    showGST = ("option_show_gst" in groupedData) ? 1 : 0;
+    showTotal = ("option_show_total" in groupedData) ? 1 : 0;
+    showSave = ("option_show_save" in groupedData) ? 1 : 0;
+    showFreeDelivery = ("option_free_delivery" in groupedData) ? 1 : 0;
+    item_mrp = parseFloat(groupedData["mrp"][i]);
+    item_rate = parseFloat(groupedData["rate"][i]);
+    item_discount = ((item_mrp - item_rate) / item_mrp) * 100;
+    item_qty = parseFloat(groupedData["qty"][i]);
+    item_total = (item_rate * item_qty).toFixed(2);
+    item_gst_p = parseInt(groupedData["tax"][i]);
+    item_gst_amount = item_total - (item_total / (1 + (item_gst_p / 100)));
     row = {
       'name': groupedData["name"][i],
       'desc': groupedData["desc"][i],
-      'mrp': mrp ? mrp.toFixed(2) : 0,
-      'rate': incTax ? rate.toFixed(2) : rate_w_gst.toFixed(2),
-      'discount': Math.round(discount),
-      'qty': qty,
+      'mrp': item_mrp ? item_mrp.toFixed(2) : 0,
+      'rate': item_rate.toFixed(2),
+      'discount': Math.round(item_discount),
+      'qty': item_qty,
       'unit': groupedData["unit"][i],
-      'gst': gst_p,
-      'total': total,
-      'incTax': incTax ? 'Inc GST' : 'Exc GST',
+      'gst': item_gst_p,
+      'gst_amount': item_gst_amount,
+      'total': item_total,
+      'incTax': incTax,
     };
-    data.push(row);
+    item_list.push(row);
 
-    if (mrp) {
-      total_saving += (mrp - rate) * qty;
-    }
-    total_gst += total - (total / (1 + (gst_p / 100)));
-    subtotal += parseFloat(total);
+    total_gst += item_gst_amount;
+    subtotal += parseFloat(item_total);
   }
 
-  //console.log(data);
+  total_invoice = incTax ? subtotal: (subtotal + total_gst);
+
+  //console.log(item_list);
 
   const bill_type = {
     'bil': "BILL",
@@ -247,8 +252,6 @@ function action_submit_invoice_preview(event) {
 
   var invoice_id = groupedData["invoice_prefix"] + groupedData["invoice_no"];
 
-  if (isNaN(total_saving)) total_saving = 0;
-
   json_data = {
     "type": bill_type[groupedData["type"]],
     "company_name": groupedData["company_name"],
@@ -256,10 +259,16 @@ function action_submit_invoice_preview(event) {
     "date": groupedData["date"],
     "invoice_id": invoice_id,
     "bill_to": groupedData["bill_to"][0],
-    "items": data,
+    "items": item_list,
     "subtotal": subtotal.toFixed(2),
     "total_gst": total_gst.toFixed(2),
-    "total_saving": total_saving.toFixed(2),
+    "total_invoice": total_invoice.toFixed(2),
+    "incTax": incTax,
+    "showTotal": showTotal,
+    "showSubtotal": showSubtotal,
+    "showGST": showGST,
+    "showSave": showSave,
+    "showFreeDelivery": showFreeDelivery,
   };
 
   if (groupedData["terms"][0].length)
@@ -318,7 +327,7 @@ function template_invoice_create(json_data) {
   {{#each items}}
   <div class="col-6 border border-secondary border-2 border-top-0 border-end-0">
     <span class="fw-semibold">{{name}}</span><br>
-    <span>{{desc}}</span>
+    <span>{{desc}}</span> <span class="text-secondary">{{#unless incTax}}(GST {{gst}}%){{/unless}}</span>
   </div>
   <div class="col-2 border border-secondary border-2 border-top-0 border-end-0 text-center fw-semibold">
     {{#if mrp}}<s class="text-danger">₹{{mrp}}</s><br>{{/if}}
@@ -328,25 +337,58 @@ function template_invoice_create(json_data) {
     {{qty}} {{#if unit}}{{unit}}{{/if}}
   </div>
   <div class="col-2 border border-secondary border-2 border-top-0 text-center fw-semibold">
-    ₹{{total}}
+    ₹{{total}}<br>
   </div>
   {{/each}}
   `;
 
   const template_table_footer = `
-  <div class="col-8 border border-secondary border-2 border-top-0 border-end-0">
   
-  </div>
-  <div class="col-2 border border-secondary border-2 border-top-0 border-end-0 fw-bold text-center fs-5">
-    Total
-  </div>
-  <div class="col-2 border border-secondary border-2 border-top-0 fw-bold text-center">
-    ₹{{subtotal}}
-  </div>
+  {{#unless incTax}}
+    {{#if showSubtotal}}
+      <div class="col-8 border border-secondary border-2 border-top-0 border-bottom-0 border-end-0">
+      
+      </div>
+      <div class="col-2 border border-secondary border-2 border-top-0 border-end-0 text-center">
+        Subtotal
+      </div>
+      <div class="col-2 border border-secondary border-2 border-top-0 fw-bold text-center">
+        ₹{{subtotal}}
+      </div>
+    {{/if}}
+
+    {{#if showGST}}
+      <div class="col-8 border border-secondary border-2 border-top-0 border-bottom-0 border-end-0">
+      
+      </div>
+      <div class="col-2 border border-secondary border-2 border-top-0 border-end-0 text-center">
+        GST
+      </div>
+      <div class="col-2 border border-secondary border-2 border-top-0 fw-bold text-center">
+        ₹{{total_gst}}
+      </div>
+    {{/if}}
+  {{/unless}}
+
+  {{#if showTotal}}
+    <div class="col-8 border border-secondary border-2 border-top-0 border-bottom-0 border-end-0">
+    
+    </div>
+    <div class="col-2 border border-secondary border-2 border-top-0 border-end-0 fw-bold text-center fs-5">
+      Total{{#if incTax}}<br><span class="fw-semibold fs-6">(Inc. GST)</span>{{/if}}
+    </div>
+    <div class="col-2 border border-secondary border-2 border-top-0 fw-bold text-center">
+      ₹{{total_invoice}}
+    </div>
+  {{/if}}
+  
+
   <div class="col-12 border border-secondary border-2 border-top-0">
     {{#if notes}}<strong>Note:</strong><br>{{nl2br notes}}<br>{{/if}}
     {{#if terms}}
     <strong>Terms & Conditions:</strong><br>
+      {{#if incTax}}- Price is inclusive of GST{{else}}- GST Extra{{/if}} <br>
+      - Transport: {{#if showFreeDelivery}}Free Delivery{{else}}Exclusive (Buyer Scope){{/if}} <br>
       {{nl2br terms}}
     {{/if}}
   </div>
