@@ -111,16 +111,35 @@ function action_invoice_row_delete(event) {
   currentRow.remove();
 }
 
+function get_product_description(item) {
+  json = { 
+    "Chain Link Fence": { title: "TATA Chain Link Fence", desc: "12G (2.50mm) - 3x3/5ft x 100ft" },
+    "Knotted Fence": { title: "TATA Chain Link Fence", desc: "12G (2.50mm) - 5ft x 100ft" },
+    "Stambh Post": { title: "TATA Stambh Post - 7ft", desc: "" },
+    "Wiron GI Wire": { title: "TATA Wiron GI Wire", desc: "16G (1.60mm)" },
+    "Brabed Wire": { title: "TATA Brabed Wire", desc: "3500 ft x 3 lines = 10500ft ~= 15 coils x 35Kg" },
+    "Cool Roof Tiles": { title: "Cool Roof Tiles - 300x300mm (Heavy Duty)", desc: "1.8mm Thickness, Floor Body, Glossy Finish" },
+    "Swimming Pool Tiles": { title: "Swimming Pool - 300x300mm (Heavy Duty)", desc: "1.8mm Thickness, Floor Body, Glossy Finish" },
+    "MS Pipe": { title: "M.S. Pipe 50x50mm, Thickness 2.90mm", desc: "Grade 2, Length: 6M, (35.33 Kg/Length) (100 Qty)" },
+    "GI Pipe": { title: "G.I. Pipe 50x50mm, Thickness 2.90mm", desc: "Grade 2, Length: 6M, (35.33 Kg/Length) (100 Qty)" },
+  };
+
+  ret = (item in json)? json[item] : ({title: item, desc: ""});
+  return ret;
+}
+
 
 function action_invoice_add_row(add_item) {
   //console.log(add_item);
+
+  json_data = get_product_description(add_item);
 
   const template_table_row = `
   <div id="item-row" class="d-flex flex-column flex-md-row mb-3 border-bottom">
     <div class="d-flex flex-row flex-md-row-reverse flex-fill">
       <div class="d-flex flex-column mb-3 flex-fill">
-        <input type="text" name="name" class="form-control" value="${add_item}" autocomplete="off" required>
-        <textarea name="desc" type="text" class="form-control" placeholder="Description.." rows="1">12G (2.50mm) - 3x3/5ft x 100ft</textarea>
+        <input type="text" name="name" class="form-control" value="${json_data.title}" autocomplete="off" required>
+        <textarea name="desc" type="text" class="form-control" placeholder="Description.." rows="1">${json_data.desc}</textarea>
       </div>
       <div>
         <button type="button" id="deleteRow" class="btn btn-link fw-bold link-danger text-decoration-none" onclick="return action_invoice_row_delete(event)"><i title="Remove item" class="bi bi-x-circle"></i></button>
@@ -219,7 +238,7 @@ function action_submit_invoice_preview(event) {
     item_qty = parseFloat(groupedData["qty"][i]);
     item_total = (item_rate * item_qty).toFixed(2);
     item_gst_p = parseInt(groupedData["tax"][i]);
-    item_gst_amount = item_total - (item_total / (1 + (item_gst_p / 100)));
+    item_gst_amount = (item_total * (item_gst_p / 100));
     row = {
       'name': groupedData["name"][i],
       'desc': groupedData["desc"][i],
