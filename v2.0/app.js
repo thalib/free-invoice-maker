@@ -114,10 +114,10 @@ function action_invoice_row_delete(event) {
 function get_product_description(item) {
   json = { 
     "Chain Link Fence": { title: "TATA Chain Link Fence", desc: "12G (2.50mm) - 3x3/5ft x 100ft" },
-    "Knotted Fence": { title: "TATA Chain Link Fence", desc: "12G (2.50mm) - 5ft x 100ft" },
+    "Knotted Fence": { title: "TATA Knotted Fence", desc: "Tata Wiron 12G (2.50mm) - 5ft x 100ft" },
     "Stambh Post": { title: "TATA Stambh Post - 7ft", desc: "" },
     "Wiron GI Wire": { title: "TATA Wiron GI Wire", desc: "16G (1.60mm)" },
-    "Brabed Wire": { title: "TATA Brabed Wire", desc: "3500 ft x 3 lines = 10500ft ~= 15 coils x 35Kg" },
+    "Barbed Wire": { title: "TATA Barbed Wire", desc: "3500 ft x 3 lines = 10500ft ~= 15 coils x 35Kg" },
     "Cool Roof Tiles": { title: "Cool Roof Tiles - 300x300mm (Heavy Duty)", desc: "1.8mm Thickness, Floor Body, Glossy Finish" },
     "Swimming Pool Tiles": { title: "Swimming Pool - 300x300mm (Heavy Duty)", desc: "1.8mm Thickness, Floor Body, Glossy Finish" },
     "MS Pipe": { title: "M.S. Pipe 50x50mm, Thickness 2.90mm", desc: "Grade 2, Length: 6M, (35.33 Kg/Length) (100 Qty)" },
