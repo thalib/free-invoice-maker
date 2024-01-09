@@ -316,10 +316,10 @@ function template_invoice_create(json_data) {
     Name
   </div>
   <div class="col-2 border border-secondary border-2 border-top-0 border-end-0 text-center fw-bold">
-    Price
+    Qty
   </div>
   <div class="col-2 border border-secondary border-2 border-top-0 border-end-0 text-center fw-bold">
-    Qty
+    Price
   </div>
   <div class="col-2 border border-secondary border-2 border-top-0 text-center fw-bold">
     Total
@@ -331,11 +331,11 @@ function template_invoice_create(json_data) {
     <span>{{desc}}</span> <span class="text-secondary">{{#unless incTax}}(GST {{gst}}%){{/unless}}</span>
   </div>
   <div class="col-2 border border-secondary border-2 border-top-0 border-end-0 text-center fw-semibold">
-    {{#if mrp}}<s class="text-danger">₹{{mrp}}</s><br>{{/if}}
-    ₹{{rate}}
+    {{qty}} {{#if unit}}{{unit}}{{/if}}
   </div>
   <div class="col-2 border border-secondary border-2 border-top-0 border-end-0 text-center fw-semibold">
-    {{qty}} {{#if unit}}{{unit}}{{/if}}
+    {{#if mrp}}<s class="text-danger">₹{{mrp}}</s><br>{{/if}}
+    ₹{{rate}}
   </div>
   <div class="col-2 border border-secondary border-2 border-top-0 text-center fw-semibold">
     ₹{{total}}<br>
