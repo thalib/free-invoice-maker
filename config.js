@@ -28,3 +28,15 @@ function get_product_description(item) {
   ret = (item in json)? json[item] : ({title: item, desc: ""});
   return ret;
 }
+
+function login_enabled() {
+  return false; // set it true to enable it. 
+}
+
+function login_user() {
+  return 'devnodes'; // set it true to enable it. 
+}
+
+function login_pass() {
+  return 'devnodes'; // set it true to enable it. 
+}

@@ -24,7 +24,7 @@ function action_login(event) {
   const username = document.getElementById("login_name").value;
   const password = document.getElementById("login_pass").value;
 
-  if (password === "thalib") {
+  if ((password === login_pass()) && (password === login_user())) {
     show_app();
     localStorage.setItem('login', 1);
   } else {
@@ -35,7 +35,7 @@ function action_login(event) {
 
 function form_init() {
 
-  const enable_login = false;
+  const enable_login = login_enabled();
   if (enable_login) {
     var login = parseInt(localStorage.getItem('login'), 10);
     if (login) {
