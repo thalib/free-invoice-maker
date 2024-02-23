@@ -19,10 +19,6 @@ Github repo: [https://github.com/thalib/free-invoice-maker](https://github.com/t
 
 ![Free & Opensource Invoice Creator by devnodes.in](screenshot/free-invoice-creator-app.png)
 
-### Settings
-
-![Free & Opensource Invoice Creator by devnodes.in](screenshot/settings.png)
-
 ### Sample invoice
 
 ![Free & Opensource Invoice Creator by devnodes.in](screenshot/invoice.png)
