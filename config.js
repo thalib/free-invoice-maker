@@ -11,18 +11,21 @@ function update_company_settings() {
 `;
 }
 
-function get_product_description(item) {
-  json = { 
-    "Apple iPhone 11": { title: "Apple iPhone 11", desc: "128GB, Green" },
-    "Apple iPhone 12": { title: "Apple iPhone 12", desc: "128GB, Blue" },
-    "Apple iPhone 13": { title: "Apple iPhone 13", desc: "128GB, Pink" },
-    "Apple iPhone 14": { title: "Apple iPhone 14", desc: "128GB, Black" },
-    "Apple iPhone 15": { title: "Apple iPhone 15", desc: "128GB, Yellow" },
-  };
+const config_json_item_list = {
+  "Apple iPhone 11": { title: "Apple iPhone 11", desc: "128GB, Green" },
+  "Apple iPhone 12": { title: "Apple iPhone 12", desc: "128GB, Blue" },
+  "Apple iPhone 13": { title: "Apple iPhone 13", desc: "128GB, Pink" },
+  "Apple iPhone 14": { title: "Apple iPhone 14", desc: "128GB, Black" },
+  "Apple iPhone 15": { title: "Apple iPhone 15", desc: "128GB, Yellow" },
+};
 
-  ret = (item in json)? json[item] : ({title: item, desc: ""});
+
+function get_product_description(item) {
+  ret = (item in config_json_item_list) ? config_json_item_list[item] : ({ title: item, desc: "" });
   return ret;
 }
+
+
 
 function login_enabled() {
   return false; // set it true to enable it. 

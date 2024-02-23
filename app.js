@@ -33,6 +33,27 @@ function action_login(event) {
 
 }
 
+function init_data_list() {
+
+  //config_json_item_list -> config.js
+  if (config_json_item_list) {
+
+    //insert first item from the list to form. 
+    const first_item = config_json_item_list[Object.keys(config_json_item_list)[0]];
+    action_invoice_add_row(first_item['title']);
+
+    const list = document.getElementById('DataListOptions_AddItem');
+    list.innerHTML = ''; // clear current list
+
+    for (var item in config_json_item_list) {
+      let option = document.createElement('option');
+      option.value = item;
+      list.appendChild(option);
+    }
+
+  }
+}
+
 function form_init() {
 
   const enable_login = login_enabled();
@@ -46,6 +67,8 @@ function form_init() {
   } else {
     show_app();
   }
+
+  init_data_list();
 
   const today = new Date();
   document.getElementById('invoice_date').value = today.toISOString().substring(0, 10);

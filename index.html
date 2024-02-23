@@ -58,9 +58,7 @@
       addButtonClicked.addEventListener("click", function(e) {
         e.preventDefault();
         __add_item();
-      }); 
-
-      action_invoice_add_row("Chain Link Fence");
+      });
 
       if (typeof update_company_settings === "function") { 
         update_company_settings();
@@ -261,16 +259,13 @@ Website: www.devnodes.in </textarea>
     </div> <!-- div container -->
   </main>
 
+  <!-- This Data List will be changed by JS ref init_data_list() -->
   <datalist id="DataListOptions_AddItem">
-    <option value="Chain Link Fence"></option>
-    <option value="Knotted Fence"></option>
-    <option value="Stambh Post"></option>
-    <option value="Wiron GI Wire"></option>
-    <option value="Barbed Wire"></option>
-    <option value="Cool Roof Tiles"></option>
-    <option value="Swimming Pool Tiles"></option>
-    <option value="MS Pipe"></option>
-    <option value="GI Pipe"></option>
+    <option value="Apple iPhone 11"></option>
+    <option value="Apple iPhone 12"></option>
+    <option value="Apple iPhone 13"></option>
+    <option value="Apple iPhone 14"></option>
+    <option value="Apple iPhone 15"></option>
   </datalist>
 
   <footer id="invoice_output" class="d-none">
